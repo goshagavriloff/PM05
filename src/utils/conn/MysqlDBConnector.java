@@ -93,7 +93,13 @@ public class MysqlDBConnector extends Connector{
             int columnCnt = rsMeta.getColumnCount();
             List<String> columnNames = new ArrayList<String>();
             for(int i=1;i<=columnCnt;i++) {
-                columnNames.add(rsMeta.getColumnName(i).toUpperCase());
+                String columnName=rsMeta.getColumnName(i).toUpperCase();
+
+                if (columnNames.contains(columnName)){
+                    columnName=rsMeta.getColumnLabel(i).toUpperCase();
+                }
+
+                columnNames.add(columnName);
             }
 
             while(rs.next()) { // convert each object to an human readable JSON object

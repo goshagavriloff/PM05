@@ -51,8 +51,12 @@ public class JTableBuilder {
         Object[] row =new Object[_columns.size()];
 
         for (int i = 0; i < _columns.size(); i++) {
-            String value=_columns.get(i).getValue();
-            row[i]=topic.getString(value);
+            String key=_columns.get(i).getValue();
+            String value="";
+            if (topic.has(key)){
+                value=topic.getString(key);
+            }
+            row[i]=value;
         }
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();

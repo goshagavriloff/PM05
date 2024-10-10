@@ -7,35 +7,28 @@ import gui.components.director.JDialogDirector;
 import gui.dialog.CreateTopicDialog;
 import gui.dialog.DialogForm;
 import gui.dialog.TopicDialog;
-import kotlin.Pair;
 import org.json.JSONObject;
 import utils.MyEntry;
 import utils.listener.IListener;
 import utils.listener.SendDBListener;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.function.Supplier;
 
 public class ForumForm extends GuiForm{
     private JPanel panel1;
-    private JTable tableTopics;
+    protected JTable tableTopics;
     private JButton addTopicButton;
 
     public String title="Форум \"Бедный Студент\"";
     public Dimension size=new Dimension(750,600);
 
-    private TopicService _topics;
-    private String _login;
-    private JTableBuilder _builder;
+    protected TopicService _topics;
+    protected String _login;
+    protected JTableBuilder _builder;
 
     public ForumForm(String login) {
         super();
@@ -81,29 +74,35 @@ public class ForumForm extends GuiForm{
 
     }
 
-    private void openModal(Supplier<DialogForm> supplier){
+    protected void openModal(Supplier<DialogForm> supplier){
         JDialogDirector director=new JDialogDirector()
                 .build(supplier);
 
         director.make();
     }
 
-    private void createUIComponents() {
+    protected void onCellClick(MouseEvent e,Supplier<DialogForm> modal){
+        int row_index = tableTopics.getSelectedRow();
+        boolean isCellClicked=SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1 && row_index!=-1;
+        if (isCellClicked){
+            openModal(modal);
+            _topics.get();
+        }
+    }
+
+
+    protected void createUIComponents() {
         _builder=new JTableBuilder();
 
         List<MyEntry<String,String>> columns=TopicService.getColumns();
 
-        JTableListener callback=new JTableListener() {
+        JTableListener callback=new JTableListener(){
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseClicked(MouseEvent mouseEvent) {
                 int row_index = tableTopics.getSelectedRow();
-                if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1 && row_index!=-1) {
+                String id= (String) tableTopics.getModel().getValueAt(row_index, 0);
 
-                    String id= (String) tableTopics.getModel().getValueAt(row_index, 0);
-
-                    openModal(() -> new TopicDialog(id,_login));
-                    _topics.get();
-                }
+                onCellClick(mouseEvent,() -> new TopicDialog(id,_login));
             }
         };
 

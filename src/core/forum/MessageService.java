@@ -10,15 +10,10 @@ public class MessageService extends Service{
 
     public MessageService(){
         super();
-        methods.put("getById",this::getById);
         methods.put("store",this::store);
         methods.put("getByTopicId",this::getByTopicId);
     }
 
-    @Override
-    protected void getById(HashMap<String, String> params) {
-
-    }
 
     public static List<MyEntry<String, String>> getColumns() {
 

@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class AuthForm extends GuiForm{
     private JPanel panel1;
@@ -83,7 +84,15 @@ public class AuthForm extends GuiForm{
             @Override
             public void onResult(List<JSONObject> data) {
                 String login=data.get(0).getString("NAME");
-                ForumForm form = new ForumForm(login);
+                String role=data.get(0).getString("ROLE_NAME");
+                Supplier<ForumForm> form=()->new ForumForm(login);
+
+                if (role.equals("moderator")) {
+                    form=()->new ForumModeratorForm(login);
+                }
+
+                form.get();
+
                 close();
             }
 

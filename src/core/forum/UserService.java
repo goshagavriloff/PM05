@@ -18,7 +18,6 @@ public class UserService extends Service{
     }
 
 
-    @Override
     protected void getById(HashMap<String, String> params) {
         String id=params.get("id");
 
@@ -43,7 +42,9 @@ public class UserService extends Service{
     private void auth(HashMap<String, String> params) {
         String login=params.get("login");
         String pwd=params.get("pwd");
-        String _sql="SELECT * FROM users WHERE name='%s' and password='%s'".formatted(login,pwd);
+        String _sql= """
+                SELECT * FROM `view_users` WHERE name='%s' and password='%s'
+                """ .formatted(login,pwd);
 
         activeListener =getDBListener();
         handle(_sql);

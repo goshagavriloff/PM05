@@ -52,5 +52,4 @@ public abstract class Service {
     }
 
 
-    protected abstract void getById(HashMap<String, String> params);
 }

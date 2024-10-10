@@ -14,6 +14,7 @@ public class TopicService extends Service{
         methods.put("getById",this::getById);
         methods.put("getAll",this::getAll);
         methods.put("store",this::store);
+        methods.put("update",this::update);
     }
 
 
@@ -27,7 +28,6 @@ public class TopicService extends Service{
         handle(_sql);
     }
 
-    @Override
     protected void getById(HashMap<String, String> params){
         String id=params.get("topic_id");
         String _sql="SELECT * FROM topics where id='%s'".formatted(id);
@@ -55,6 +55,17 @@ public class TopicService extends Service{
         String login=params.get("topic_login");
 
         String _sql="call api_create_topic('%s','%s','%s')".formatted(login,title,descr);
+        activeListener= getDBListener();
+
+        handle(_sql);
+    }
+
+    public void update(HashMap<String, String> params){
+        String title=params.get("topic_title");
+        String descr=params.get("topic_descr");
+        String id=params.get("topic_id");
+
+        String _sql="call api_update_topic('%s','%s','%s')".formatted(id,title,descr);
         activeListener= getDBListener();
 
         handle(_sql);
